@@ -38,7 +38,7 @@ const EducationSchema = z.object({
   graduationDate: z.string().describe('The date of graduation.'),
 });
 
-export const ParseResumePdfInputSchema = z.object({
+const ParseResumePdfInputSchema = z.object({
   pdfDataUri: z
     .string()
     .describe(
@@ -47,7 +47,7 @@ export const ParseResumePdfInputSchema = z.object({
 });
 export type ParseResumePdfInput = z.infer<typeof ParseResumePdfInputSchema>;
 
-export const ParseResumePdfOutputSchema = z.object({
+const ParseResumePdfOutputSchema = z.object({
   personalInfo: PersonalInfoSchema.optional(),
   experience: z.array(ExperienceSchema).optional(),
   education: z.array(EducationSchema).optional(),
