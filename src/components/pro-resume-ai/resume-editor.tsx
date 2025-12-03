@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useTransition, ChangeEvent } from 'react';
+import React, { useState, useTransition, ChangeEvent, useCallback } from 'react';
 import type { Dispatch, SetStateAction } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,10 +8,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { User, Briefcase, GraduationCap, Wrench, Sparkles, LoaderCircle, Trash2, PlusCircle, BrainCircuit } from 'lucide-react';
+import { User, Briefcase, GraduationCap, Wrench, Sparkles, LoaderCircle, Trash2, PlusCircle, BrainCircuit, UploadCloud } from 'lucide-react';
 import type { ResumeData, Experience, Education } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
-import { generateResumeContentAction, learnFromUserEditsAction } from '@/lib/actions';
+import { generateResumeContentAction, learnFromUserEditsAction, parseResumePdfAction } from '@/lib/actions';
+import { useDropzone } from 'react-dropzone';
 
 interface ResumeEditorProps {
   resumeData: ResumeData;
@@ -22,7 +23,57 @@ export default function ResumeEditor({ resumeData, setResumeData }: ResumeEditor
   const { toast } = useToast();
   const [isGenerating, startGenerationTransition] = useTransition();
   const [isLearning, startLearningTransition] = useTransition();
+  const [isParsing, startParsingTransition] = useTransition();
   const [originalSummary, setOriginalSummary] = useState('');
+
+  const onDrop = useCallback((acceptedFiles: File[]) => {
+    const file = acceptedFiles[0];
+    if (file && file.type === 'application/pdf') {
+      handlePdfUpload(file);
+    } else {
+      toast({
+        variant: 'destructive',
+        title: 'Invalid File Type',
+        description: 'Please upload a PDF file.',
+      });
+    }
+  }, []);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: { 'application/pdf': ['.pdf'] },
+    multiple: false,
+  });
+
+  const handlePdfUpload = (file: File) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUri = reader.result as string;
+      startParsingTransition(async () => {
+        try {
+          const result = await parseResumePdfAction({ pdfDataUri: dataUri });
+          if (result) {
+            setResumeData(prev => ({
+              ...prev,
+              personalInfo: result.personalInfo ?? prev.personalInfo,
+              experience: result.experience ?? prev.experience,
+              education: result.education ?? prev.education,
+              skills: result.skills ?? prev.skills,
+            }));
+            toast({
+              title: 'Resume Parsed!',
+              description: 'Your information has been imported from the PDF.',
+            });
+          } else {
+             toast({ variant: 'destructive', title: 'Parsing Failed', description: 'Could not extract information from the PDF.' });
+          }
+        } catch (error) {
+           toast({ variant: 'destructive', title: 'Parsing Error', description: 'An unexpected error occurred.' });
+        }
+      });
+    };
+    reader.readAsDataURL(file);
+  };
 
   const handlePersonalInfoChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -115,9 +166,28 @@ export default function ResumeEditor({ resumeData, setResumeData }: ResumeEditor
     <Card className="h-full">
       <CardHeader>
         <CardTitle className="font-headline text-xl">Resume Content</CardTitle>
-        <CardDescription>Fill in your details below. Use the AI tools to assist you.</CardDescription>
+        <CardDescription>Fill in your details below, or upload a PDF to get started.</CardDescription>
       </CardHeader>
       <CardContent>
+         <div {...getRootProps()} className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer mb-6 transition-colors ${isDragActive ? 'border-primary bg-primary/10' : 'border-border hover:border-primary/50'}`}>
+          <input {...getInputProps()} />
+          {isParsing ? (
+             <div className="flex flex-col items-center gap-2">
+                <LoaderCircle className="animate-spin text-primary" />
+                <p className="text-muted-foreground">Parsing your resume...</p>
+             </div>
+          ) : (
+            <div className="flex flex-col items-center gap-2 text-muted-foreground">
+              <UploadCloud className="h-8 w-8" />
+              {isDragActive ? (
+                <p>Drop the PDF here ...</p>
+              ) : (
+                <p>Drag 'n' drop a PDF here, or click to select file</p>
+              )}
+            </div>
+          )}
+        </div>
+
         <Accordion type="multiple" defaultValue={['personal-info', 'experience']} className="w-full">
           {/* Personal Info */}
           <AccordionItem value="personal-info">

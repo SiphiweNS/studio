@@ -20,6 +20,12 @@ import {
   type LearnFromUserEditsInput,
   type LearnFromUserEditsOutput,
 } from '@/ai/flows/learn-from-user-edits';
+import {
+  parseResumePdf,
+  type ParseResumePdfInput,
+  type ParseResumePdfOutput,
+} from '@/ai/flows/parse-resume-pdf';
+
 
 export async function generateResumeContentAction(
   input: GenerateResumeContentInput
@@ -43,4 +49,10 @@ export async function learnFromUserEditsAction(
   input: LearnFromUserEditsInput
 ): Promise<LearnFromUserEditsOutput> {
   return await learnFromUserEdits(input);
+}
+
+export async function parseResumePdfAction(
+  input: ParseResumePdfInput
+): Promise<ParseResumePdfOutput> {
+    return await parseResumePdf(input);
 }
