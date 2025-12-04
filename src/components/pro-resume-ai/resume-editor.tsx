@@ -37,7 +37,7 @@ export default function ResumeEditor({ resumeData, setResumeData }: ResumeEditor
         description: 'Please upload a PDF file.',
       });
     }
-  }, []);
+  }, [setResumeData, toast]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -194,17 +194,17 @@ export default function ResumeEditor({ resumeData, setResumeData }: ResumeEditor
             <AccordionTrigger className="font-semibold"><User className="mr-2" /> Personal Information</AccordionTrigger>
             <AccordionContent className="space-y-4 pt-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2"><Label htmlFor="name">Full Name</Label><Input id="name" name="name" value={resumeData.personalInfo.name} onChange={handlePersonalInfoChange} /></div>
-                <div className="space-y-2"><Label htmlFor="email">Email</Label><Input id="email" name="email" type="email" value={resumeData.personalInfo.email} onChange={handlePersonalInfoChange} /></div>
-                <div className="space-y-2"><Label htmlFor="phone">Phone</Label><Input id="phone" name="phone" value={resumeData.personalInfo.phone} onChange={handlePersonalInfoChange} /></div>
-                <div className="space-y-2"><Label htmlFor="linkedin">LinkedIn</Label><Input id="linkedin" name="linkedin" value={resumeData.personalInfo.linkedin} onChange={handlePersonalInfoChange} /></div>
+                <div className="space-y-2"><Label htmlFor="name">Full Name</Label><Input id="name" name="name" placeholder="e.g. Jane Doe" value={resumeData.personalInfo.name} onChange={handlePersonalInfoChange} /></div>
+                <div className="space-y-2"><Label htmlFor="email">Email</Label><Input id="email" name="email" type="email" placeholder="e.g. jane.doe@email.com" value={resumeData.personalInfo.email} onChange={handlePersonalInfoChange} /></div>
+                <div className="space-y-2"><Label htmlFor="phone">Phone</Label><Input id="phone" name="phone" placeholder="e.g. (123) 456-7890" value={resumeData.personalInfo.phone} onChange={handlePersonalInfoChange} /></div>
+                <div className="space-y-2"><Label htmlFor="linkedin">LinkedIn</Label><Input id="linkedin" name="linkedin" placeholder="e.g. linkedin.com/in/janedoe" value={resumeData.personalInfo.linkedin} onChange={handlePersonalInfoChange} /></div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="website">Portfolio/Website</Label><Input id="website" name="website" value={resumeData.personalInfo.website} onChange={handlePersonalInfoChange} />
+                <Label htmlFor="website">Portfolio/Website</Label><Input id="website" name="website" placeholder="e.g. github.com/janedoe" value={resumeData.personalInfo.website} onChange={handlePersonalInfoChange} />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="summary">Professional Summary</Label>
-                <Textarea id="summary" name="summary" className="min-h-[120px]" value={resumeData.personalInfo.summary} onChange={handlePersonalInfoChange} />
+                <Textarea id="summary" name="summary" className="min-h-[120px]" placeholder="A brief professional summary about yourself. You can also click 'Generate with AI' to create one." value={resumeData.personalInfo.summary} onChange={handlePersonalInfoChange} />
                 <div className="flex gap-2 justify-end">
                     <Button variant="outline" size="sm" onClick={handleLearn} disabled={isLearning}>
                         {isLearning ? <LoaderCircle className="animate-spin mr-2" /> : <BrainCircuit className="mr-2"/>} Learn from Edits
@@ -223,11 +223,11 @@ export default function ResumeEditor({ resumeData, setResumeData }: ResumeEditor
               {resumeData.experience.map((exp, index) => (
                 <div key={exp.id} className="space-y-4 p-4 border rounded-lg relative">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2"><Label>Job Title</Label><Input name="jobTitle" value={exp.jobTitle} onChange={(e) => handleExperienceChange(index, e)} /></div>
-                    <div className="space-y-2"><Label>Company</Label><Input name="company" value={exp.company} onChange={(e) => handleExperienceChange(index, e)} /></div>
-                    <div className="space-y-2"><Label>Location</Label><Input name="location" value={exp.location} onChange={(e) => handleExperienceChange(index, e)} /></div>
-                    <div className="space-y-2"><Label>Start Date</Label><Input name="startDate" value={exp.startDate} onChange={(e) => handleExperienceChange(index, e)} /></div>
-                    <div className="space-y-2"><Label>End Date</Label><Input name="endDate" value={exp.endDate} onChange={(e) => handleExperienceChange(index, e)} /></div>
+                    <div className="space-y-2"><Label>Job Title</Label><Input name="jobTitle" placeholder="e.g. Software Engineer" value={exp.jobTitle} onChange={(e) => handleExperienceChange(index, e)} /></div>
+                    <div className="space-y-2"><Label>Company</Label><Input name="company" placeholder="e.g. Tech Corp" value={exp.company} onChange={(e) => handleExperienceChange(index, e)} /></div>
+                    <div className="space-y-2"><Label>Location</Label><Input name="location" placeholder="e.g. San Francisco, CA" value={exp.location} onChange={(e) => handleExperienceChange(index, e)} /></div>
+                    <div className="space-y-2"><Label>Start Date</Label><Input name="startDate" placeholder="e.g. Jan 2020" value={exp.startDate} onChange={(e) => handleExperienceChange(index, e)} /></div>
+                    <div className="space-y-2"><Label>End Date</Label><Input name="endDate" placeholder="e.g. Present" value={exp.endDate} onChange={(e) => handleExperienceChange(index, e)} /></div>
                   </div>
                   <div className="space-y-2"><Label>Responsibilities / Achievements</Label><Textarea name="responsibilities" className="min-h-[100px]" value={exp.responsibilities.join('\n')} onChange={(e) => handleExperienceChange(index, e)} placeholder="Enter one achievement per line"/></div>
                   <Button variant="ghost" size="icon" className="absolute top-2 right-2 text-destructive" onClick={() => removeExperience(index)}><Trash2 className="w-4 h-4" /></Button>
@@ -243,10 +243,10 @@ export default function ResumeEditor({ resumeData, setResumeData }: ResumeEditor
               {resumeData.education.map((edu, index) => (
                 <div key={edu.id} className="space-y-4 p-4 border rounded-lg relative">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2"><Label>Degree/Certificate</Label><Input name="degree" value={edu.degree} onChange={(e) => handleEducationChange(index, e)} /></div>
-                    <div className="space-y-2"><Label>Institution</Label><Input name="institution" value={edu.institution} onChange={(e) => handleEducationChange(index, e)} /></div>
-                    <div className="space-y-2"><Label>Location</Label><Input name="location" value={edu.location} onChange={(e) => handleEducationChange(index, e)} /></div>
-                    <div className="space-y-2"><Label>Graduation Date</Label><Input name="graduationDate" value={edu.graduationDate} onChange={(e) => handleEducationChange(index, e)} /></div>
+                    <div className="space-y-2"><Label>Degree/Certificate</Label><Input name="degree" placeholder="e.g. B.S. in Computer Science" value={edu.degree} onChange={(e) => handleEducationChange(index, e)} /></div>
+                    <div className="space-y-2"><Label>Institution</Label><Input name="institution" placeholder="e.g. University of Technology" value={edu.institution} onChange={(e) => handleEducationChange(index, e)} /></div>
+                    <div className="space-y-2"><Label>Location</Label><Input name="location" placeholder="e.g. Techville, USA" value={edu.location} onChange={(e) => handleEducationChange(index, e)} /></div>
+                    <div className="space-y-2"><Label>Graduation Date</Label><Input name="graduationDate" placeholder="e.g. May 2019" value={edu.graduationDate} onChange={(e) => handleEducationChange(index, e)} /></div>
                   </div>
                    <Button variant="ghost" size="icon" className="absolute top-2 right-2 text-destructive" onClick={() => removeEducation(index)}><Trash2 className="w-4 h-4" /></Button>
                 </div>

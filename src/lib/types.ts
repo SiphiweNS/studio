@@ -41,38 +41,34 @@ export interface ResumeData {
 
 export const initialResumeData: ResumeData = {
   personalInfo: {
-    name: 'Your Name',
-    email: 'your.email@example.com',
-    phone: '(123) 456-7890',
-    linkedin: 'linkedin.com/in/yourprofile',
-    website: 'yourportfolio.com',
-    summary: 'A brief professional summary about yourself. Click "Generate with AI" to create one.',
+    name: '',
+    email: '',
+    phone: '',
+    linkedin: '',
+    website: '',
+    summary: '',
   },
   experience: [
     {
       id: 'exp1',
-      jobTitle: 'Software Engineer',
-      company: 'Tech Corp',
-      location: 'San Francisco, CA',
-      startDate: 'Jan 2020',
-      endDate: 'Present',
-      responsibilities: [
-        'Developed and maintained web applications using React and Node.js.',
-        'Collaborated with cross-functional teams to define, design, and ship new features.',
-        'Improved application performance by 20% through code optimization and refactoring.',
-      ],
+      jobTitle: '',
+      company: '',
+      location: '',
+      startDate: '',
+      endDate: '',
+      responsibilities: [],
     },
   ],
   education: [
     {
       id: 'edu1',
-      degree: 'B.S. in Computer Science',
-      institution: 'University of Technology',
-      location: 'Techville, USA',
-      graduationDate: 'May 2019',
+      degree: '',
+      institution: '',
+      location: '',
+      graduationDate: '',
     },
   ],
-  skills: ['JavaScript', 'React', 'Node.js', 'Next.js', 'TypeScript', 'Tailwind CSS', 'Project Management'],
+  skills: [],
   customization: {
     nameFontFamily: "'Space Grotesk', sans-serif",
     nameFontSize: "3rem", // 48px
