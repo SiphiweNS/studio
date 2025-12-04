@@ -51,7 +51,8 @@ export default function ResumePreviewPanel({ resumeData }: ResumePreviewPanelPro
                 <AlertDialogContent>
                     <AlertDialogHeader>
                     <AlertDialogTitle>ATS Compatibility Check</AlertDialogTitle>
-                    <AlertDialogDescription>
+                    <AlertDialogDescription asChild>
+                      <div>
                         This simulated check ensures your resume is parser-friendly.
                         <ul className="list-disc pl-5 mt-4 space-y-2 text-sm">
                             <li className="text-green-500">Standard font detected. Good!</li>
@@ -59,6 +60,7 @@ export default function ResumePreviewPanel({ resumeData }: ResumePreviewPanelPro
                             <li className="text-yellow-500">Warning: Avoid using complex tables or columns in the final document for maximum compatibility.</li>
                             <li>Your resume has a high probability of being parsed correctly by modern ATS.</li>
                         </ul>
+                      </div>
                     </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
