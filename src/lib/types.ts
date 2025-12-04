@@ -1,3 +1,4 @@
+
 export interface PersonalInfo {
   name: string;
   email: string;
@@ -25,11 +26,17 @@ export interface Education {
   graduationDate: string;
 }
 
+export interface Customization {
+  nameFontFamily: string;
+  nameFontSize: string;
+}
+
 export interface ResumeData {
   personalInfo: PersonalInfo;
   experience: Experience[];
   education: Education[];
   skills: string[];
+  customization: Customization;
 }
 
 export const initialResumeData: ResumeData = {
@@ -66,4 +73,8 @@ export const initialResumeData: ResumeData = {
     },
   ],
   skills: ['JavaScript', 'React', 'Node.js', 'Next.js', 'TypeScript', 'Tailwind CSS', 'Project Management'],
+  customization: {
+    nameFontFamily: "'Space Grotesk', sans-serif",
+    nameFontSize: "3rem", // 48px
+  }
 };

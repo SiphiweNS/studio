@@ -1,3 +1,4 @@
+
 "use client";
 import type { ResumeData } from '@/lib/types';
 import { Mail, Phone, Linkedin, Globe, MapPin, Briefcase, GraduationCap, Wrench, User } from 'lucide-react';
@@ -7,14 +8,21 @@ interface TemplateProps {
 }
 
 export default function TemplateCreative({ resumeData }: TemplateProps) {
-  const { personalInfo, experience, education, skills } = resumeData;
+  const { personalInfo, experience, education, skills, customization } = resumeData;
   const accentColor = '#9B59B6'; // Violet accent from proposal
+
+  const nameStyle = {
+    fontFamily: customization.nameFontFamily,
+    fontSize: customization.nameFontSize,
+    lineHeight: 1.2,
+  };
+
 
   return (
     <div className="text-gray-800 bg-white font-sans flex min-h-full">
       {/* Sidebar */}
       <div className="w-1/3 p-6 text-white" style={{ backgroundColor: accentColor }}>
-        <h1 className="text-4xl font-bold font-headline mb-2">{personalInfo.name}</h1>
+        <h1 className="font-bold font-headline mb-2" style={nameStyle}>{personalInfo.name}</h1>
         <div className="space-y-4 mt-8">
             <div>
                 <h2 className="text-lg font-semibold uppercase tracking-wider mb-2 flex items-center gap-2"><User size={18}/> Contact</h2>

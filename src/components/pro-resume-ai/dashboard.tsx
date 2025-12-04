@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from 'react';
@@ -18,9 +19,9 @@ export default function Dashboard() {
           <div className="lg:col-span-8 xl:col-span-5">
             <ResumeEditor resumeData={resumeData} setResumeData={setResumeData} />
           </div>
-          <div className="lg:col-span-4 xl:col-span-7 grid grid-cols-1 gap-8">
+          <div className="lg:col-span-4 xl:col-span-7 grid grid-cols-1 gap-8 auto-rows-max">
             <div className="lg:col-span-1">
-              <ResumePreviewPanel resumeData={resumeData} />
+              <ResumePreviewPanel resumeData={resumeData} setResumeData={setResumeData} />
             </div>
             <div className="lg:col-span-1">
               <AIToolsPanel />

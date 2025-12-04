@@ -1,3 +1,4 @@
+
 "use client";
 import type { ResumeData } from '@/lib/types';
 import { Separator } from '@/components/ui/separator';
@@ -8,13 +9,19 @@ interface TemplateProps {
 }
 
 export default function TemplateClassic({ resumeData }: TemplateProps) {
-  const { personalInfo, experience, education, skills } = resumeData;
+  const { personalInfo, experience, education, skills, customization } = resumeData;
+
+  const nameStyle = {
+    fontFamily: customization.nameFontFamily,
+    fontSize: customization.nameFontSize,
+    lineHeight: 1.2,
+  };
 
   return (
     <div className="text-black bg-white font-serif p-8">
       {/* Header */}
       <div className="text-center border-b-2 border-gray-400 pb-4 mb-6">
-        <h1 className="text-4xl font-bold tracking-widest uppercase">{personalInfo.name}</h1>
+        <h1 className="font-bold tracking-widest uppercase" style={nameStyle}>{personalInfo.name}</h1>
         <div className="flex justify-center items-center gap-x-4 gap-y-1 text-xs mt-3 flex-wrap">
           {personalInfo.email && <span className="flex items-center gap-1">{personalInfo.email}</span>}
           {personalInfo.phone && <span className="flex items-center gap-1">| {personalInfo.phone}</span>}
