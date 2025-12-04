@@ -23,6 +23,8 @@ export default function AIToolsPanel() {
 
   const [keywordsResult, setKeywordsResult] = useState<KeywordsOutput | null>(null);
   const [matchResult, setMatchResult] = useState<MatchOutput | null>(null);
+  const [jobDescriptionForMatch, setJobDescriptionForMatch] = useState('');
+
 
   const handleSuggestKeywords = (formData: FormData) => {
     const jobRole = formData.get('jobRole') as string;
@@ -55,10 +57,8 @@ export default function AIToolsPanel() {
     });
   };
 
-  const handleMatchJobDescription = (formData: FormData) => {
-    const jobDescriptionText = formData.get('jobDescription') as string;
-
-    if (!jobDescriptionText) {
+  const handleMatchJobDescription = () => {
+    if (!jobDescriptionForMatch) {
       toast({
         variant: 'destructive',
         title: 'Missing Job Description',
@@ -69,8 +69,8 @@ export default function AIToolsPanel() {
 
     startMatchTransition(async () => {
       // In a real app, you'd get the current resume text from a shared state.
-      const resumeText = "This is a placeholder for the user's current resume text.";
-      const result = await matchJobDescriptionAction({ jobDescriptionText, resumeText });
+      const resumeText = "This is a placeholder for the user's current resume text. In a real application this would come from the editor state.";
+      const result = await matchJobDescriptionAction({ jobDescriptionText: jobDescriptionForMatch, resumeText });
        if (result && typeof result.similarityScore === 'number') {
         setMatchResult(result);
         toast({
@@ -97,10 +97,10 @@ export default function AIToolsPanel() {
         <Tabs defaultValue="keywords">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="keywords">
-              <Lightbulb className="mr-2" /> Keyword Optimizer
+               Keyword Optimizer
             </TabsTrigger>
             <TabsTrigger value="matcher">
-              <Target className="mr-2" /> Job Matcher
+               Job Matcher
             </TabsTrigger>
           </TabsList>
           <TabsContent value="keywords" className="mt-4">
@@ -114,7 +114,7 @@ export default function AIToolsPanel() {
                 <Input id="industry" name="industry" placeholder="e.g., Tech, Finance" required />
               </div>
               <Button type="submit" disabled={isKeywordsPending} className="w-full">
-                {isKeywordsPending ? <LoaderCircle className="animate-spin" /> : 'Suggest Keywords'}
+                {isKeywordsPending ? <LoaderCircle className="animate-spin" /> : <><Lightbulb className="mr-2" /> Suggest Keywords</>}
               </Button>
             </form>
             {keywordsResult && (
@@ -129,7 +129,7 @@ export default function AIToolsPanel() {
             )}
           </TabsContent>
           <TabsContent value="matcher" className="mt-4">
-             <form action={handleMatchJobDescription} className="space-y-4">
+             <div className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="jobDescription">Job Description</Label>
                 <Textarea
@@ -138,12 +138,14 @@ export default function AIToolsPanel() {
                   placeholder="Paste the job description here..."
                   className="min-h-[150px]"
                   required
+                  value={jobDescriptionForMatch}
+                  onChange={(e) => setJobDescriptionForMatch(e.target.value)}
                 />
               </div>
-              <Button type="submit" disabled={isMatchPending} className="w-full">
-                {isMatchPending ? <LoaderCircle className="animate-spin" /> : 'Analyze Match'}
+              <Button onClick={handleMatchJobDescription} disabled={isMatchPending} className="w-full">
+                {isMatchPending ? <LoaderCircle className="animate-spin" /> : <><Target className="mr-2" /> Analyze Match</>}
               </Button>
-            </form>
+            </div>
             {matchResult && (
               <div className="mt-6 space-y-4">
                 <div>
