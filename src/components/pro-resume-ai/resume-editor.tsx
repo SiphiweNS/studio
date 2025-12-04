@@ -8,7 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { User, Briefcase, GraduationCap, Wrench, Sparkles, LoaderCircle, Trash2, PlusCircle, BrainCircuit, UploadCloud } from 'lucide-react';
+import { User, Briefcase, GraduationCap, Wrench, Sparkles, LoaderCircle, Trash2, PlusCircle, BrainCircuit, UploadCloud, Target } from 'lucide-react';
 import type { ResumeData, Experience, Education } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 import { generateResumeContentAction, learnFromUserEditsAction, parseResumePdfAction } from '@/lib/actions';
@@ -25,6 +25,7 @@ export default function ResumeEditor({ resumeData, setResumeData }: ResumeEditor
   const [isLearning, startLearningTransition] = useTransition();
   const [isParsing, startParsingTransition] = useTransition();
   const [originalSummary, setOriginalSummary] = useState('');
+  const [targetJobRole, setTargetJobRole] = useState('');
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
@@ -131,10 +132,17 @@ export default function ResumeEditor({ resumeData, setResumeData }: ResumeEditor
   };
   
   const handleGenerate = () => {
+    if (!targetJobRole) {
+      toast({
+        variant: 'destructive',
+        title: 'Missing Job Role',
+        description: 'Please enter a target job role to generate a summary.',
+      });
+      return;
+    }
     startGenerationTransition(async () => {
       const careerInformation = `Experience: ${resumeData.experience.map(e => `${e.jobTitle} at ${e.company}`).join(', ')}. Skills: ${resumeData.skills.join(', ')}.`;
-      const jobRole = "Target Job Role"; // In a real app, get this from an input
-      const result = await generateResumeContentAction({ careerInformation, jobRole });
+      const result = await generateResumeContentAction({ careerInformation, jobRole: targetJobRole });
       if (result && result.resumeContent) {
         setOriginalSummary(result.resumeContent);
         setResumeData(prev => ({
@@ -205,13 +213,26 @@ export default function ResumeEditor({ resumeData, setResumeData }: ResumeEditor
               <div className="space-y-2">
                 <Label htmlFor="summary">Professional Summary</Label>
                 <Textarea id="summary" name="summary" className="min-h-[120px]" placeholder="A brief professional summary about yourself. You can also click 'Generate with AI' to create one." value={resumeData.personalInfo.summary} onChange={handlePersonalInfoChange} />
-                <div className="flex gap-2 justify-end">
-                    <Button variant="outline" size="sm" onClick={handleLearn} disabled={isLearning}>
-                        {isLearning ? <LoaderCircle className="animate-spin mr-2" /> : <BrainCircuit className="mr-2"/>} Learn from Edits
-                    </Button>
-                    <Button variant="default" size="sm" onClick={handleGenerate} disabled={isGenerating}>
-                        {isGenerating ? <LoaderCircle className="animate-spin mr-2" /> : <Sparkles className="mr-2"/>} Generate with AI
-                    </Button>
+                <div className="flex flex-col gap-2">
+                   <div className="relative">
+                      <Target className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                      <Input 
+                        id="targetJobRole" 
+                        name="targetJobRole" 
+                        placeholder="Your Target Job Role (e.g., Software Engineer)" 
+                        value={targetJobRole}
+                        onChange={(e) => setTargetJobRole(e.target.value)}
+                        className="pl-10"
+                      />
+                   </div>
+                  <div className="flex gap-2 justify-end">
+                      <Button variant="outline" size="sm" onClick={handleLearn} disabled={isLearning}>
+                          {isLearning ? <LoaderCircle className="animate-spin mr-2" /> : <BrainCircuit className="mr-2"/>} Learn from Edits
+                      </Button>
+                      <Button variant="default" size="sm" onClick={handleGenerate} disabled={isGenerating}>
+                          {isGenerating ? <LoaderCircle className="animate-spin mr-2" /> : <Sparkles className="mr-2"/>} Generate with AI
+                      </Button>
+                  </div>
                 </div>
               </div>
             </AccordionContent>
