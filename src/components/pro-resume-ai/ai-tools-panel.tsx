@@ -12,11 +12,17 @@ import { Progress } from '@/components/ui/progress';
 import { useToast } from '@/hooks/use-toast';
 import { suggestKeywordsAction, matchJobDescriptionAction } from '@/lib/actions';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { type ResumeData } from '@/lib/types';
+
+interface AIToolsPanelProps {
+  resumeData: ResumeData;
+}
+
 
 type KeywordsOutput = { keywords: string[] };
 type MatchOutput = { similarityScore: number; suggestions: string };
 
-export default function AIToolsPanel() {
+export default function AIToolsPanel({ resumeData }: AIToolsPanelProps) {
   const [isKeywordsPending, startKeywordsTransition] = useTransition();
   const [isMatchPending, startMatchTransition] = useTransition();
   const { toast } = useToast();
@@ -56,6 +62,15 @@ export default function AIToolsPanel() {
       }
     });
   };
+  
+  const getResumeText = () => {
+    const { personalInfo, experience, education, skills } = resumeData;
+    let text = `Summary: ${personalInfo.summary}\n\n`;
+    text += `Experience:\n${experience.map(e => `${e.jobTitle} at ${e.company}\n${e.responsibilities.join('\n')}`).join('\n\n')}\n\n`;
+    text += `Education:\n${education.map(e => `${e.degree} from ${e.institution}`).join('\n')}\n\n`;
+    text += `Skills: ${skills.join(', ')}`;
+    return text;
+  };
 
   const handleMatchJobDescription = () => {
     if (!jobDescriptionForMatch) {
@@ -68,8 +83,7 @@ export default function AIToolsPanel() {
     }
 
     startMatchTransition(async () => {
-      // In a real app, you'd get the current resume text from a shared state.
-      const resumeText = "This is a placeholder for the user's current resume text. In a real application this would come from the editor state.";
+      const resumeText = getResumeText();
       const result = await matchJobDescriptionAction({ jobDescriptionText: jobDescriptionForMatch, resumeText });
        if (result && typeof result.similarityScore === 'number') {
         setMatchResult(result);
