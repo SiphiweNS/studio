@@ -2,6 +2,7 @@
 "use client";
 import type { ResumeData } from '@/lib/types';
 import { Mail, Phone, Linkedin, Globe, MapPin, Briefcase, GraduationCap, Wrench, User } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface TemplateProps {
   resumeData: ResumeData;
@@ -10,6 +11,8 @@ interface TemplateProps {
 export default function TemplateCreative({ resumeData }: TemplateProps) {
   const { personalInfo, experience, education, skills, customization } = resumeData;
   const accentColor = '#9B59B6'; // Violet accent from proposal
+  const highlightSections = customization.highlightSections;
+
 
   const nameStyle = {
     fontFamily: customization.nameFontFamily,
@@ -34,7 +37,7 @@ export default function TemplateCreative({ resumeData }: TemplateProps) {
                 </div>
             </div>
 
-            {skills && skills.length > 0 && <div>
+            {skills && skills.length > 0 && <div className={cn(highlightSections && "bg-black/10 p-3 rounded-md")}>
                 <h2 className="text-lg font-semibold uppercase tracking-wider mb-2 flex items-center gap-2"><Wrench size={18}/> Skills</h2>
                 <ul className="list-inside list-disc text-sm space-y-1">
                     {skills.map(skill => <li key={skill}>{skill}</li>)}
@@ -68,7 +71,7 @@ export default function TemplateCreative({ resumeData }: TemplateProps) {
 
         {/* Experience */}
         {experience && experience.length > 0 && experience[0]?.jobTitle && (
-          <div>
+          <div className={cn(highlightSections && "bg-gray-100 p-4 rounded-lg")}>
             <h2 className="text-2xl font-bold font-headline mb-4" style={{color: accentColor}}>Work Experience</h2>
             <div className="space-y-6">
               {experience.map(exp => (

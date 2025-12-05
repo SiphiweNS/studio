@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -14,10 +15,10 @@ import { defaultsDeep } from 'lodash';
 function mergeDefaults(target: any, source: any) {
   for (const key in source) {
     if (source.hasOwnProperty(key)) {
-      if (source[key] instanceof Object && key in target) {
-        target[key] = mergeDefaults(target[key], source[key]);
-      } else if (!(key in target)) {
-        target[key] = source[key];
+      if (source[key] instanceof Object && key in target && !(source[key] instanceof Array)) {
+        target[key] = mergeDefaults(target[key] || {}, source[key]);
+      } else {
+        target[key] = target[key] ?? source[key];
       }
     }
   }

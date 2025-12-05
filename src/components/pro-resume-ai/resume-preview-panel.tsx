@@ -48,7 +48,7 @@ export default function ResumePreviewPanel({ resumeData, setResumeData }: Resume
         }
     };
     
-    const handleCustomizationChange = (field: string, value: string) => {
+    const handleCustomizationChange = (field: string, value: any) => {
         setResumeData(prev => ({
             ...prev,
             customization: {
@@ -141,6 +141,14 @@ export default function ResumePreviewPanel({ resumeData, setResumeData }: Resume
                                     onCheckedChange={(checked) => handleLayoutChange('sidebar', checked)}
                                 />
                              </div>
+                            <div className="flex items-center justify-between">
+                                <Label htmlFor="highlight-sections">Highlight Sections</Label>
+                                <Switch
+                                    id="highlight-sections"
+                                    checked={resumeData.customization.highlightSections}
+                                    onCheckedChange={(checked) => handleCustomizationChange('highlightSections', checked)}
+                                />
+                            </div>
                         </div>
                     </div>
                 </PopoverContent>

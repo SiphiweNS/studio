@@ -3,6 +3,8 @@
 import type { ResumeData } from '@/lib/types';
 import { Separator } from '@/components/ui/separator';
 import { Mail, Phone, Linkedin, Globe, MapPin, Briefcase, GraduationCap, Wrench } from 'lucide-react';
+import { cn } from '@/lib/utils';
+
 
 interface TemplateProps {
   resumeData: ResumeData;
@@ -26,9 +28,9 @@ const SidebarContactInfo = ({ personalInfo }: { personalInfo: ResumeData['person
     </div>
 );
 
-const ExperienceSection = ({ experience }: { experience: ResumeData['experience'] }) => (
+const ExperienceSection = ({ experience, highlight }: { experience: ResumeData['experience'], highlight: boolean }) => (
     experience && experience.length > 0 && experience[0]?.jobTitle && (
-          <div>
+          <div className={cn(highlight && 'bg-gray-100 p-4 rounded-lg')}>
             <h2 className="text-2xl font-bold font-headline mb-4 flex items-center gap-2"><Briefcase size={22} className="text-primary"/> Experience</h2>
             <div className="space-y-6">
               {experience.map((exp) => (
@@ -75,9 +77,9 @@ const EducationSection = ({ education }: { education: ResumeData['education'] })
         )
 );
 
-const SkillsSection = ({ skills }: { skills: ResumeData['skills'] }) => (
+const SkillsSection = ({ skills, highlight }: { skills: ResumeData['skills'], highlight: boolean }) => (
     skills && skills.length > 0 && (
-          <div>
+          <div className={cn(highlight && 'bg-gray-100 p-4 rounded-lg')}>
             <h2 className="text-2xl font-bold font-headline mb-4 flex items-center gap-2"><Wrench size={20} className="text-primary"/> Skills</h2>
             <div className="flex flex-wrap gap-2">
               {skills.map(skill => (
@@ -99,6 +101,7 @@ export default function TemplateModern({ resumeData }: TemplateProps) {
 
   const useSidebar = customization.layout.sidebar;
   const useTwoColumn = customization.layout.twoColumn;
+  const highlightSections = customization.highlightSections;
 
   const MainContent = () => (
     <>
@@ -107,10 +110,10 @@ export default function TemplateModern({ resumeData }: TemplateProps) {
       </div>}
       {(experience && experience.length > 0 && experience[0]?.jobTitle) && <Separator className="my-8" />}
       <div className={useTwoColumn ? "grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10" : "space-y-10"}>
-          <ExperienceSection experience={experience} />
+          <ExperienceSection experience={experience} highlight={highlightSections} />
           <div className="space-y-10">
             <EducationSection education={education} />
-            <SkillsSection skills={skills} />
+            <SkillsSection skills={skills} highlight={highlightSections} />
           </div>
       </div>
     </>
@@ -129,7 +132,7 @@ export default function TemplateModern({ resumeData }: TemplateProps) {
                             <SidebarContactInfo personalInfo={personalInfo} />
                         </div>
                          {skills && skills.length > 0 && (
-                            <div>
+                            <div className={cn(highlightSections && 'bg-gray-100 p-4 rounded-lg')}>
                                 <h2 className="text-xl font-bold font-headline mb-3 text-primary">Skills</h2>
                                 <div className="flex flex-wrap gap-1">
                                     {skills.map(skill => (

@@ -33,6 +33,7 @@ export interface Customization {
     sidebar: boolean;
     twoColumn: boolean;
   };
+  highlightSections: boolean;
 }
 
 export interface ResumeData {
@@ -45,40 +46,58 @@ export interface ResumeData {
 
 export const initialResumeData: ResumeData = {
   personalInfo: {
-    name: '',
-    email: '',
-    phone: '',
-    linkedin: '',
-    website: '',
-    summary: '',
+    name: 'Jane Doe',
+    email: 'jane.doe@example.com',
+    phone: '(123) 456-7890',
+    linkedin: 'linkedin.com/in/janedoe',
+    website: 'janedoe.dev',
+    summary: 'Seasoned software engineer with over 8 years of experience in building and scaling web applications. Proficient in React, Node.js, and cloud-native technologies. Passionate about creating elegant and user-friendly solutions.',
   },
   experience: [
     {
       id: 'exp1',
-      jobTitle: '',
-      company: '',
-      location: '',
-      startDate: '',
-      endDate: '',
-      responsibilities: [],
+      jobTitle: 'Senior Software Engineer',
+      company: 'Tech Solutions Inc.',
+      location: 'San Francisco, CA',
+      startDate: 'Jan 2020',
+      endDate: 'Present',
+      responsibilities: [
+        'Led the development of a new microservices-based architecture, improving system scalability by 50%.',
+        'Mentored junior engineers, fostering a culture of growth and knowledge sharing.',
+        'Collaborated with product managers to define and implement new features.',
+      ],
+    },
+     {
+      id: 'exp2',
+      jobTitle: 'Software Engineer',
+      company: 'Innovate LLC',
+      location: 'Austin, TX',
+      startDate: 'Jun 2017',
+      endDate: 'Dec 2019',
+      responsibilities: [
+        'Developed and maintained the company\'s flagship React-based web application.',
+        'Wrote unit and integration tests, increasing code coverage from 60% to 90%.',
+        'Participated in agile ceremonies and contributed to sprint planning.',
+      ],
     },
   ],
   education: [
     {
       id: 'edu1',
-      degree: '',
-      institution: '',
-      location: '',
-      graduationDate: '',
+      degree: 'B.S. in Computer Science',
+      institution: 'University of Technology',
+      location: 'Techville, USA',
+      graduationDate: 'May 2017',
     },
   ],
-  skills: [],
+  skills: ['React', 'Node.js', 'TypeScript', 'AWS', 'Docker', 'Kubernetes', 'Project Management'],
   customization: {
     nameFontFamily: "'Space Grotesk', sans-serif",
     nameFontSize: "3rem", // 48px
     layout: {
         sidebar: false,
         twoColumn: false,
-    }
+    },
+    highlightSections: false,
   }
 };

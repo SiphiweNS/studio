@@ -3,6 +3,7 @@
 import type { ResumeData } from '@/lib/types';
 import { Separator } from '@/components/ui/separator';
 import { Mail, Phone, Linkedin, Globe, MapPin } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface TemplateProps {
   resumeData: ResumeData;
@@ -27,11 +28,11 @@ const SidebarContactInfo = ({ personalInfo }: { personalInfo: ResumeData['person
 );
 
 
-const MainContent = ({ experience, education }: { experience: ResumeData['experience'], education: ResumeData['education'] }) => (
+const MainContent = ({ experience, education, highlight }: { experience: ResumeData['experience'], education: ResumeData['education'], highlight: boolean }) => (
     <>
         {/* Experience */}
         {experience && experience.length > 0 && experience[0]?.jobTitle && (
-        <div className="mb-6">
+        <div className={cn("mb-6", highlight && 'bg-gray-100 p-4 rounded-md')}>
             <h2 className="text-sm font-bold uppercase tracking-wider mb-3 border-b border-gray-300 pb-1">Experience</h2>
             <div className="space-y-5">
             {experience.map((exp) => (
@@ -84,9 +85,10 @@ export default function TemplateClassic({ resumeData }: TemplateProps) {
 
   const useSidebar = customization.layout.sidebar;
   const useTwoColumn = customization.layout.twoColumn;
+  const highlightSections = customization.highlightSections;
 
   const renderSkills = () => (
-     skills && skills.length > 0 && <div className="mb-6">
+     skills && skills.length > 0 && <div className={cn("mb-6", highlightSections && 'bg-gray-100 p-4 rounded-md')}>
         <h2 className="text-sm font-bold uppercase tracking-wider mb-2 border-b border-gray-300 pb-1">Skills</h2>
         <div className="flex flex-wrap gap-2">
             {skills.map(skill => (
@@ -133,7 +135,7 @@ export default function TemplateClassic({ resumeData }: TemplateProps) {
                     <h2 className="text-sm font-bold uppercase tracking-wider mb-2 border-b border-gray-300 pb-1">Summary</h2>
                     <p className="text-sm text-gray-700">{personalInfo.summary}</p>
                 </div>}
-                <MainContent experience={experience} education={[]} />
+                <MainContent experience={experience} education={[]} highlight={highlightSections} />
             </div>
         </div>
       )
@@ -156,7 +158,7 @@ export default function TemplateClassic({ resumeData }: TemplateProps) {
 
       <div className={useTwoColumn ? "grid grid-cols-3 gap-8" : ""}>
         <div className={useTwoColumn ? "col-span-2" : ""}>
-            <MainContent experience={experience} education={useTwoColumn ? [] : education} />
+            <MainContent experience={experience} education={useTwoColumn ? [] : education} highlight={highlightSections} />
         </div>
         <div className={useTwoColumn ? "col-span-1" : ""}>
             {renderSkills()}
