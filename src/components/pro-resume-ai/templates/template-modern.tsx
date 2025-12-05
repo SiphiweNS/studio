@@ -2,7 +2,7 @@
 "use client";
 import type { ResumeData } from '@/lib/types';
 import { Separator } from '@/components/ui/separator';
-import { Mail, Phone, Linkedin, Globe, MapPin, Briefcase, GraduationCap, Wrench } from 'lucide-react';
+import { Mail, Phone, Linkedin, Globe, MapPin, Briefcase, GraduationCap, Wrench, HeartHandshake } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 
@@ -90,8 +90,31 @@ const SkillsSection = ({ skills, highlight }: { skills: ResumeData['skills'], hi
         )
 );
 
+const VolunteeringSection = ({ volunteering }: { volunteering: ResumeData['volunteering'] }) => (
+  volunteering && volunteering.length > 0 && volunteering[0]?.organization && (
+    <div>
+      <h2 className="text-2xl font-bold font-headline mb-4 flex items-center gap-2"><HeartHandshake size={22} className="text-primary"/> Volunteering</h2>
+      <div className="space-y-6">
+        {volunteering.map((vol) => (
+          <div key={vol.id}>
+            <div className="flex justify-between items-baseline">
+              <h3 className="text-xl font-semibold text-gray-800">{vol.role}</h3>
+              <p className="text-sm font-medium text-gray-500">{vol.startDate} - {vol.endDate}</p>
+            </div>
+            <div className="flex justify-between items-baseline mb-2">
+                <p className="text-md text-primary font-semibold">{vol.organization}</p>
+                <p className="text-sm text-gray-500 flex items-center gap-1"><MapPin size={14}/>{vol.location}</p>
+            </div>
+            <p className="text-gray-600">{vol.description}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+);
+
 export default function TemplateModern({ resumeData }: TemplateProps) {
-  const { personalInfo, experience, education, skills, customization } = resumeData;
+  const { personalInfo, experience, education, skills, volunteering, customization } = resumeData;
 
   const nameStyle = {
     fontFamily: customization.nameFontFamily,
@@ -114,6 +137,7 @@ export default function TemplateModern({ resumeData }: TemplateProps) {
           <div className="space-y-10">
             <EducationSection education={education} />
             <SkillsSection skills={skills} highlight={highlightSections} />
+            <VolunteeringSection volunteering={volunteering} />
           </div>
       </div>
     </>

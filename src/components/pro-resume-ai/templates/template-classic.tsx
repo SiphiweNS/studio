@@ -28,7 +28,7 @@ const SidebarContactInfo = ({ personalInfo }: { personalInfo: ResumeData['person
 );
 
 
-const MainContent = ({ experience, education, highlight }: { experience: ResumeData['experience'], education: ResumeData['education'], highlight: boolean }) => (
+const MainContent = ({ experience, education, volunteering, highlight }: { experience: ResumeData['experience'], education: ResumeData['education'], volunteering: ResumeData['volunteering'], highlight: boolean }) => (
     <>
         {/* Experience */}
         {experience && experience.length > 0 && experience[0]?.jobTitle && (
@@ -71,11 +71,29 @@ const MainContent = ({ experience, education, highlight }: { experience: ResumeD
                 </div>
             </div>
         )}
+        {/* Volunteering */}
+        {volunteering && volunteering.length > 0 && volunteering[0]?.organization && (
+          <div className="mb-6">
+              <h2 className="text-sm font-bold uppercase tracking-wider mb-3 border-b border-gray-300 pb-1">Volunteering</h2>
+              <div className="space-y-4">
+              {volunteering.map((vol) => (
+                  <div key={vol.id}>
+                    <div className="flex justify-between items-baseline">
+                      <h3 className="text-base font-bold">{vol.role}</h3>
+                      <p className="text-xs font-medium text-gray-600">{vol.startDate} - {vol.endDate}</p>
+                    </div>
+                    <p className="text-sm font-semibold text-gray-800">{vol.organization}</p>
+                    <p className="text-sm text-gray-700 mt-1">{vol.description}</p>
+                  </div>
+              ))}
+              </div>
+          </div>
+        )}
     </>
 )
 
 export default function TemplateClassic({ resumeData }: TemplateProps) {
-  const { personalInfo, experience, education, skills, customization } = resumeData;
+  const { personalInfo, experience, education, skills, volunteering, customization } = resumeData;
 
   const nameStyle = {
     fontFamily: customization.nameFontFamily,
@@ -116,6 +134,24 @@ export default function TemplateClassic({ resumeData }: TemplateProps) {
     )
   );
 
+  const renderVolunteering = () => (
+    volunteering && volunteering.length > 0 && volunteering[0]?.organization && (
+      <div className="mb-6">
+          <h2 className="text-sm font-bold uppercase tracking-wider mb-3 border-b border-gray-300 pb-1">Volunteering</h2>
+          <div className="space-y-4">
+          {volunteering.map((vol) => (
+              <div key={vol.id}>
+                <h3 className="text-base font-bold">{vol.role} at {vol.organization}</h3>
+                <p className="text-xs text-gray-600">{vol.startDate} - {vol.endDate}</p>
+                <p className="text-sm text-gray-700 mt-1">{vol.description}</p>
+              </div>
+          ))}
+          </div>
+      </div>
+    )
+  );
+
+
   if (useSidebar) {
       return (
         <div className="text-black bg-white font-serif p-8 flex gap-8">
@@ -128,6 +164,7 @@ export default function TemplateClassic({ resumeData }: TemplateProps) {
                     </div>
                     {renderSkills()}
                     {renderEducation()}
+                    {renderVolunteering()}
                 </div>
             </div>
             <div className="w-2/3">
@@ -135,7 +172,7 @@ export default function TemplateClassic({ resumeData }: TemplateProps) {
                     <h2 className="text-sm font-bold uppercase tracking-wider mb-2 border-b border-gray-300 pb-1">Summary</h2>
                     <p className="text-sm text-gray-700">{personalInfo.summary}</p>
                 </div>}
-                <MainContent experience={experience} education={[]} highlight={highlightSections} />
+                <MainContent experience={experience} education={[]} volunteering={[]} highlight={highlightSections} />
             </div>
         </div>
       )
@@ -158,11 +195,12 @@ export default function TemplateClassic({ resumeData }: TemplateProps) {
 
       <div className={useTwoColumn ? "grid grid-cols-3 gap-8" : ""}>
         <div className={useTwoColumn ? "col-span-2" : ""}>
-            <MainContent experience={experience} education={useTwoColumn ? [] : education} highlight={highlightSections} />
+            <MainContent experience={experience} education={useTwoColumn ? [] : education} volunteering={useTwoColumn ? [] : volunteering} highlight={highlightSections} />
         </div>
         <div className={useTwoColumn ? "col-span-1" : ""}>
             {renderSkills()}
             {useTwoColumn && renderEducation()}
+            {useTwoColumn && renderVolunteering()}
         </div>
       </div>
     </div>

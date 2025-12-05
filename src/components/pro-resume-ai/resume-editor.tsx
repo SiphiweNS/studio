@@ -8,8 +8,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { User, Briefcase, GraduationCap, Wrench, Sparkles, LoaderCircle, Trash2, PlusCircle, BrainCircuit, UploadCloud, Target } from 'lucide-react';
-import type { ResumeData, Experience, Education } from '@/lib/types';
+import { User, Briefcase, GraduationCap, Wrench, Sparkles, LoaderCircle, Trash2, PlusCircle, BrainCircuit, UploadCloud, Target, HeartHandshake } from 'lucide-react';
+import type { ResumeData, Experience, Education, Volunteering } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 import { generateResumeContentAction, learnFromUserEditsAction, parseResumePdfAction } from '@/lib/actions';
 import { useDropzone } from 'react-dropzone';
@@ -128,6 +128,27 @@ export default function ResumeEditor({ resumeData, setResumeData }: ResumeEditor
     setResumeData(prev => ({
       ...prev,
       education: prev.education.filter((_, i) => i !== index)
+    }));
+  };
+
+  const handleVolunteeringChange = (index: number, e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    const newVolunteering = [...resumeData.volunteering];
+    newVolunteering[index] = { ...newVolunteering[index], [name]: value };
+    setResumeData(prev => ({ ...prev, volunteering: newVolunteering }));
+  };
+
+  const addVolunteering = () => {
+    setResumeData(prev => ({
+      ...prev,
+      volunteering: [...prev.volunteering, { id: `vol${Date.now()}`, organization: '', role: '', location: '', startDate: '', endDate: '', description: '' }]
+    }));
+  };
+
+  const removeVolunteering = (index: number) => {
+    setResumeData(prev => ({
+      ...prev,
+      volunteering: prev.volunteering.filter((_, i) => i !== index)
     }));
   };
   
@@ -255,6 +276,26 @@ export default function ResumeEditor({ resumeData, setResumeData }: ResumeEditor
                 </div>
               ))}
               <Button variant="outline" onClick={addExperience}><PlusCircle className="mr-2 w-4 h-4"/>Add Experience</Button>
+            </AccordionContent>
+          </AccordionItem>
+          {/* Volunteering */}
+          <AccordionItem value="volunteering">
+            <AccordionTrigger className="font-semibold"><HeartHandshake className="mr-2" /> Volunteering</AccordionTrigger>
+            <AccordionContent className="space-y-6 pt-4">
+              {resumeData.volunteering.map((vol, index) => (
+                <div key={vol.id} className="space-y-4 p-4 border rounded-lg relative">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2"><Label>Organization</Label><Input name="organization" placeholder="e.g. Red Cross" value={vol.organization} onChange={(e) => handleVolunteeringChange(index, e)} /></div>
+                    <div className="space-y-2"><Label>Role</Label><Input name="role" placeholder="e.g. Community Volunteer" value={vol.role} onChange={(e) => handleVolunteeringChange(index, e)} /></div>
+                    <div className="space-y-2"><Label>Location</Label><Input name="location" placeholder="e.g. New York, NY" value={vol.location} onChange={(e) => handleVolunteeringChange(index, e)} /></div>
+                    <div className="space-y-2"><Label>Start Date</Label><Input name="startDate" placeholder="e.g. Jun 2021" value={vol.startDate} onChange={(e) => handleVolunteeringChange(index, e)} /></div>
+                    <div className="space-y-2"><Label>End Date</Label><Input name="endDate" placeholder="e.g. Present" value={vol.endDate} onChange={(e) => handleVolunteeringChange(index, e)} /></div>
+                  </div>
+                  <div className="space-y-2"><Label>Description</Label><Textarea name="description" className="min-h-[100px]" value={vol.description} onChange={(e) => handleVolunteeringChange(index, e)} placeholder="Briefly describe your contributions"/></div>
+                  <Button variant="ghost" size="icon" className="absolute top-2 right-2 text-destructive" onClick={() => removeVolunteering(index)}><Trash2 className="w-4 h-4" /></Button>
+                </div>
+              ))}
+              <Button variant="outline" onClick={addVolunteering}><PlusCircle className="mr-2 w-4 h-4"/>Add Volunteering</Button>
             </AccordionContent>
           </AccordionItem>
           {/* Education */}

@@ -1,7 +1,7 @@
 
 "use client";
 import type { ResumeData } from '@/lib/types';
-import { Mail, Phone, Linkedin, Globe, MapPin, Briefcase, GraduationCap, Wrench, User } from 'lucide-react';
+import { Mail, Phone, Linkedin, Globe, MapPin, Briefcase, GraduationCap, Wrench, User, HeartHandshake } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface TemplateProps {
@@ -9,7 +9,7 @@ interface TemplateProps {
 }
 
 export default function TemplateCreative({ resumeData }: TemplateProps) {
-  const { personalInfo, experience, education, skills, customization } = resumeData;
+  const { personalInfo, experience, education, skills, volunteering, customization } = resumeData;
   const accentColor = '#9B59B6'; // Violet accent from proposal
   const highlightSections = customization.highlightSections;
 
@@ -71,7 +71,7 @@ export default function TemplateCreative({ resumeData }: TemplateProps) {
 
         {/* Experience */}
         {experience && experience.length > 0 && experience[0]?.jobTitle && (
-          <div className={cn(highlightSections && "bg-gray-100 p-4 rounded-lg")}>
+          <div className={cn("mb-8", highlightSections && "bg-gray-100 p-4 rounded-lg")}>
             <h2 className="text-2xl font-bold font-headline mb-4" style={{color: accentColor}}>Work Experience</h2>
             <div className="space-y-6">
               {experience.map(exp => (
@@ -88,6 +88,27 @@ export default function TemplateCreative({ resumeData }: TemplateProps) {
                       <li key={i} className="text-sm">{resp}</li>
                     ))}
                   </ul>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+        
+        {/* Volunteering */}
+        {volunteering && volunteering.length > 0 && volunteering[0]?.organization && (
+          <div className={cn(highlightSections && "bg-gray-100 p-4 rounded-lg")}>
+            <h2 className="text-2xl font-bold font-headline mb-4" style={{color: accentColor}}>Volunteering</h2>
+            <div className="space-y-6">
+              {volunteering.map(vol => (
+                <div key={vol.id} className="relative pl-6">
+                   <div className="absolute left-0 top-1 h-full border-l-2 border-gray-300"></div>
+                   <div className="absolute left-[-6px] top-1 w-3 h-3 rounded-full" style={{backgroundColor: accentColor}}></div>
+                  <div className="flex justify-between items-center">
+                      <h3 className="text-lg font-bold">{vol.role}</h3>
+                      <p className="text-sm font-medium">{vol.startDate} - {vol.endDate}</p>
+                  </div>
+                  <p className="text-md font-semibold italic">{vol.organization} | {vol.location}</p>
+                  <p className="text-sm mt-2">{vol.description}</p>
                 </div>
               ))}
             </div>
