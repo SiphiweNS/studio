@@ -8,6 +8,22 @@ import AIToolsPanel from './ai-tools-panel';
 import ResumeAnalytics from './resume-analytics';
 import { type ResumeData, initialResumeData } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
+import { defaultsDeep } from 'lodash';
+
+// A simple deep merge function
+function mergeDefaults(target: any, source: any) {
+  for (const key in source) {
+    if (source.hasOwnProperty(key)) {
+      if (source[key] instanceof Object && key in target) {
+        target[key] = mergeDefaults(target[key], source[key]);
+      } else if (!(key in target)) {
+        target[key] = source[key];
+      }
+    }
+  }
+  return target;
+}
+
 
 export default function Dashboard() {
   const [resumeData, setResumeData] = useState<ResumeData | null>(null);
@@ -17,7 +33,10 @@ export default function Dashboard() {
     try {
       const savedData = localStorage.getItem('proResumeAIData');
       if (savedData) {
-        setResumeData(JSON.parse(savedData));
+        const parsedData = JSON.parse(savedData);
+        // Deep merge saved data with initial data to ensure all fields are present
+        const mergedData = mergeDefaults(parsedData, initialResumeData);
+        setResumeData(mergedData);
       } else {
         setResumeData(initialResumeData);
       }
