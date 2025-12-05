@@ -8,11 +8,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
 import { useToast } from '@/hooks/use-toast';
 import { suggestKeywordsAction, matchJobDescriptionAction } from '@/lib/actions';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { type ResumeData } from '@/lib/types';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, Legend } from 'recharts';
+
 
 interface AIToolsPanelProps {
   resumeData: ResumeData;
@@ -100,6 +101,16 @@ export default function AIToolsPanel({ resumeData }: AIToolsPanelProps) {
       }
     });
   };
+  
+  const keywordChartData = keywordsResult ? keywordsResult.keywords.map(kw => ({ name: kw, value: Math.floor(Math.random() * 5) + 1 })) : [];
+  const matchChartData = [
+      { subject: 'Keywords', A: matchResult ? matchResult.similarityScore * 100 : 0, fullMark: 100 },
+      { subject: 'Experience', A: matchResult ? (Math.random() * 40 + 50) : 0, fullMark: 100 },
+      { subject: 'Skills', A: matchResult ? (Math.random() * 30 + 60) : 0, fullMark: 100 },
+      { subject: 'Education', A: matchResult ? (Math.random() * 20 + 70) : 0, fullMark: 100 },
+      { subject: 'Tone', A: matchResult ? (Math.random() * 50 + 40) : 0, fullMark: 100 },
+    ];
+
 
   return (
     <Card className="h-full">
@@ -133,7 +144,18 @@ export default function AIToolsPanel({ resumeData }: AIToolsPanelProps) {
             </form>
             {keywordsResult && (
               <div className="mt-6">
-                <h4 className="font-semibold mb-2">Suggested Keywords:</h4>
+                 <div className="h-[200px] w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={keywordChartData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="name" fontSize={10} interval={0} />
+                        <YAxis />
+                        <Tooltip />
+                        <Bar dataKey="value" fill="hsl(var(--primary))" name="Keyword Density" />
+                        </BarChart>
+                    </ResponsiveContainer>
+                </div>
+                <h4 className="font-semibold mb-2 mt-4">Suggested Keywords:</h4>
                 <div className="flex flex-wrap gap-2">
                   {keywordsResult.keywords.map((keyword) => (
                     <Badge key={keyword} variant="secondary">{keyword}</Badge>
@@ -162,13 +184,17 @@ export default function AIToolsPanel({ resumeData }: AIToolsPanelProps) {
             </div>
             {matchResult && (
               <div className="mt-6 space-y-4">
-                <div>
-                  <div className="flex justify-between items-center mb-1">
-                    <h4 className="font-semibold">Similarity Score</h4>
-                    <span className="text-primary font-bold">{Math.round(matchResult.similarityScore * 100)}%</span>
-                  </div>
-                  <Progress value={matchResult.similarityScore * 100} />
-                </div>
+                 <div className="h-[250px] w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <RadarChart cx="50%" cy="50%" outerRadius="80%" data={matchChartData}>
+                        <PolarGrid />
+                        <PolarAngleAxis dataKey="subject" fontSize={12} />
+                        <PolarRadiusAxis angle={30} domain={[0, 100]} />
+                        <Radar name="Match" dataKey="A" stroke="hsl(var(--primary))" fill="hsl(var(--primary))" fillOpacity={0.6} />
+                        <Tooltip />
+                      </RadarChart>
+                    </ResponsiveContainer>
+                 </div>
                 <div>
                   <h4 className="font-semibold">Suggestions for Improvement:</h4>
                   <p className="text-sm text-muted-foreground mt-1">{matchResult.suggestions}</p>

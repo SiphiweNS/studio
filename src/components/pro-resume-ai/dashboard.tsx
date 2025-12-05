@@ -5,6 +5,7 @@ import Header from './header';
 import ResumeEditor from './resume-editor';
 import ResumePreviewPanel from './resume-preview-panel';
 import AIToolsPanel from './ai-tools-panel';
+import ResumeAnalytics from './resume-analytics';
 import { type ResumeData, initialResumeData } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -80,6 +81,9 @@ export default function Dashboard() {
             <ResumeEditor resumeData={resumeData} setResumeData={handleSetResumeData as React.Dispatch<React.SetStateAction<ResumeData>>} />
           </div>
           <div className="lg:col-span-4 xl:col-span-7 grid grid-cols-1 gap-8 auto-rows-max">
+             <div className="lg:col-span-1">
+              <ResumeAnalytics resumeData={resumeData} />
+            </div>
             <div className="lg:col-span-1">
               <ResumePreviewPanel resumeData={resumeData} setResumeData={handleSetResumeData as React.Dispatch<React.SetStateAction<ResumeData>>} />
             </div>
