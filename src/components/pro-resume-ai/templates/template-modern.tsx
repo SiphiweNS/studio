@@ -82,8 +82,8 @@ const SkillsSection = ({ skills, highlight }: { skills: ResumeData['skills'], hi
           <div className={cn(highlight && 'bg-gray-100 p-4 rounded-lg')}>
             <h2 className="text-2xl font-bold font-headline mb-4 flex items-center gap-2"><Wrench size={20} className="text-primary"/> Skills</h2>
             <div className="flex flex-wrap gap-2">
-              {skills.map(skill => (
-                  <span key={skill} className="bg-secondary text-secondary-foreground font-medium px-3 py-1 rounded-full text-sm">{skill}</span>
+              {skills.map((skill, index) => (
+                  <span key={`${skill}-${index}`} className="bg-secondary text-secondary-foreground font-medium px-3 py-1 rounded-full text-sm">{skill}</span>
               ))}
             </div>
           </div>
@@ -159,8 +159,8 @@ export default function TemplateModern({ resumeData }: TemplateProps) {
                             <div className={cn(highlightSections && 'bg-gray-100 p-4 rounded-lg')}>
                                 <h2 className="text-xl font-bold font-headline mb-3 text-primary">Skills</h2>
                                 <div className="flex flex-wrap gap-1">
-                                    {skills.map(skill => (
-                                        <span key={skill} className="bg-secondary text-secondary-foreground font-medium px-2 py-0.5 rounded-md text-xs">{skill}</span>
+                                    {skills.map((skill, index) => (
+                                        <span key={`${skill}-${index}`} className="bg-secondary text-secondary-foreground font-medium px-2 py-0.5 rounded-md text-xs">{skill}</span>
                                     ))}
                                 </div>
                             </div>

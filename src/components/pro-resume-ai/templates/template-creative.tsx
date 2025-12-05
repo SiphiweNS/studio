@@ -40,7 +40,7 @@ export default function TemplateCreative({ resumeData }: TemplateProps) {
             {skills && skills.length > 0 && <div className={cn(highlightSections && "bg-black/10 p-3 rounded-md")}>
                 <h2 className="text-lg font-semibold uppercase tracking-wider mb-2 flex items-center gap-2"><Wrench size={18}/> Skills</h2>
                 <ul className="list-inside list-disc text-sm space-y-1">
-                    {skills.map(skill => <li key={skill}>{skill}</li>)}
+                    {skills.map((skill, index) => <li key={`${skill}-${index}`}>{skill}</li>)}
                 </ul>
             </div>}
             

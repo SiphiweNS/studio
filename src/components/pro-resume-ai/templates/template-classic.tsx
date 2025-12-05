@@ -109,8 +109,8 @@ export default function TemplateClassic({ resumeData }: TemplateProps) {
      skills && skills.length > 0 && <div className={cn("mb-6", highlightSections && 'bg-gray-100 p-4 rounded-md')}>
         <h2 className="text-sm font-bold uppercase tracking-wider mb-2 border-b border-gray-300 pb-1">Skills</h2>
         <div className="flex flex-wrap gap-2">
-            {skills.map(skill => (
-                <span key={skill} className="text-xs bg-gray-200 text-gray-800 px-2 py-1 rounded">{skill}</span>
+            {skills.map((skill, index) => (
+                <span key={`${skill}-${index}`} className="text-xs bg-gray-200 text-gray-800 px-2 py-1 rounded">{skill}</span>
             ))}
         </div>
     </div>
