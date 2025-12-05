@@ -29,6 +29,10 @@ export interface Education {
 export interface Customization {
   nameFontFamily: string;
   nameFontSize: string;
+  layout: {
+    sidebar: boolean;
+    twoColumn: boolean;
+  };
 }
 
 export interface ResumeData {
@@ -72,5 +76,9 @@ export const initialResumeData: ResumeData = {
   customization: {
     nameFontFamily: "'Space Grotesk', sans-serif",
     nameFontSize: "3rem", // 48px
+    layout: {
+        sidebar: false,
+        twoColumn: false,
+    }
   }
 };

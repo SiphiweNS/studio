@@ -30,6 +30,7 @@ import type { ResumeData } from '@/lib/types';
 import TemplateModern from './templates/template-modern';
 import TemplateClassic from './templates/template-classic';
 import TemplateCreative from './templates/template-creative';
+import { Switch } from '@/components/ui/switch';
 
 interface ResumePreviewPanelProps {
   resumeData: ResumeData;
@@ -56,6 +57,19 @@ export default function ResumePreviewPanel({ resumeData, setResumeData }: Resume
             }
         }));
     };
+    
+    const handleLayoutChange = (field: 'sidebar' | 'twoColumn', value: boolean) => {
+        setResumeData(prev => ({
+            ...prev,
+            customization: {
+                ...prev.customization,
+                layout: {
+                    ...prev.customization.layout,
+                    [field]: value,
+                }
+            }
+        }));
+    }
 
   return (
     <Card className="h-full">
@@ -77,7 +91,7 @@ export default function ResumePreviewPanel({ resumeData, setResumeData }: Resume
                                 Adjust the look and feel of your resume.
                             </p>
                         </div>
-                        <div className="grid gap-2">
+                        <div className="grid gap-4">
                             <div className="grid grid-cols-3 items-center gap-4">
                                 <Label htmlFor="nameFontFamily">Name Font</Label>
                                 <Select
@@ -111,6 +125,22 @@ export default function ResumePreviewPanel({ resumeData, setResumeData }: Resume
                                     </SelectContent>
                                 </Select>
                             </div>
+                             <div className="flex items-center justify-between">
+                                <Label htmlFor="two-column-layout">Two-Column Layout</Label>
+                                <Switch
+                                    id="two-column-layout"
+                                    checked={resumeData.customization.layout.twoColumn}
+                                    onCheckedChange={(checked) => handleLayoutChange('twoColumn', checked)}
+                                />
+                             </div>
+                             <div className="flex items-center justify-between">
+                                <Label htmlFor="sidebar-layout">Sidebar Contact Info</Label>
+                                <Switch
+                                    id="sidebar-layout"
+                                    checked={resumeData.customization.layout.sidebar}
+                                    onCheckedChange={(checked) => handleLayoutChange('sidebar', checked)}
+                                />
+                             </div>
                         </div>
                     </div>
                 </PopoverContent>
